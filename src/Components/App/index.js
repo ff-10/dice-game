@@ -1,10 +1,10 @@
 import { Component } from "react";
+import RollDice from "../RollDice";
 
 export default class App extends Component {
-
     render() {
         return (
-            <h2>Dice game</h2>
+            <RollDice/>
         );
     }
 }
