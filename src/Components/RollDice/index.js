@@ -18,7 +18,8 @@ export default class RollDice extends Component {
         dice2: 1,
         wins: 0
       },
-      isRolling: false
+      isRolling: false,
+      roundWinner: null
     }
 
     this.roll = this.roll.bind(this);
@@ -26,34 +27,51 @@ export default class RollDice extends Component {
 
   roll() {
 
-    let dices = [
-      {
-        dice1: Math.ceil(Math.random() * 6),
-        dice2: Math.ceil(Math.random() * 6),
-      },
-      {
-        dice1: Math.ceil(Math.random() * 6),
-        dice2: Math.ceil(Math.random() * 6),
-      },
-    ]
-    let winner;
-
-    if (dices[0].dice1 + dices[0].dice2 < dices[1].dice1 + dices[1].dice2) {
-      winner = 'player';
-    } else {
-      winner = 'computer';
+    let diceValues = [];//index: 0 & 1 = player, index: 2 & 3 = computer
+    for (let i = 0; i < 4; i++) {
+      diceValues.push(Math.ceil(Math.random() * 6));
     }
 
+    let winner;
+    let playerScore = diceValues[0] + diceValues[1];
+    let computerScore = diceValues[2] + diceValues[3];
+
+    if (playerScore > computerScore) winner = 'player';
+    else if (playerScore === computerScore) winner = 'draw'
+    else winner = 'computer';
+
     this.setState({
-      player: { dice1: dices[0].dice1, dice2: dices[0].dice2, wins: winner === 'player' ? this.state.player.wins + 1 : this.state.player.wins },
-      computer: { dice1: dices[1].dice1, dice2: dices[1].dice2, wins: winner === 'computer' ? this.state.computer.wins + 1 : this.state.computer.wins },
-      isRolling: true
+      player: { dice1: diceValues[0], dice2: diceValues[1], wins: winner === 'player' ? this.state.player.wins + 1 : this.state.player.wins },
+      computer: { dice1: diceValues[2], dice2: diceValues[3], wins: winner === 'computer' ? this.state.computer.wins + 1 : this.state.computer.wins },
+      isRolling: true,
+      roundWinner: winner
     });
 
     setTimeout(() => {
-      this.setState({ isRolling: false })
+      this.setState({ isRolling: false });
     }, 1000);
   }
+
+  getAnimationClassName() {
+    let classNames = { player: '', computer: '' };
+
+    if (!this.state.roundWinner) {
+      return classNames;
+    } else if (this.state.roundWinner === 'player') {
+      classNames.player = style.win;
+      classNames.computer = style.lose;
+      return classNames;
+    } else if (this.state.roundWinner === 'draw') {
+      classNames.player = style.draw;
+      classNames.computer = style.draw;
+      return classNames;
+    } else {
+      classNames.player = style.lose;
+      classNames.computer = style.win;
+      return classNames;
+    }
+  }
+
 
   render() {
     return (
@@ -66,7 +84,8 @@ export default class RollDice extends Component {
         <div className={style.players_area}>
 
           {/* Player */}
-          <div className={style.player}>
+          <div className={`${style.player} ${this.getAnimationClassName().player}`}>
+
             <div className={style.player_header}>
               <p className={style.player_name}>You</p>
               <p className={style.player_score}>Wins: {this.state.player.wins}</p>
@@ -78,8 +97,12 @@ export default class RollDice extends Component {
             </div>
           </div>
 
+          <img alt="Game draw"
+            src="https://w7.pngwing.com/pngs/197/820/png-transparent-equals-sign-computer-icons-equality-mathematics-mathematics-rectangle-sign-noun-project.png"
+            className={style.draw_image} style={this.state.roundWinner === 'draw' ? { display: 'block' } : { display: 'none' }} /> {/* isDraw image */}
+
           {/* Computer */}
-          <div className={style.player}>
+          <div className={`${style.player} ${this.getAnimationClassName().computer}`}>
             <div className={style.player_header}>
               <p className={style.player_name}>Computer</p>
               <p className={style.player_score}>Wins: {this.state.computer.wins}</p>

@@ -100,3 +100,43 @@ body {
 .divider{
     margin: 0 15px;
 }
+
+.draw_image{
+    width: 80px;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.draw{
+    border-color: gold;
+    animation: draw 400ms 1;
+    transition: all 500ms;
+}
+.win{
+    border-color: aquamarine;
+    animation: win 400ms 1;
+    transition: all 500ms;
+}
+.lose{
+    border-color: rgb(206, 10, 10);
+    animation: lose 400ms 1;
+    transition: all 500ms;
+}
+
+@keyframes draw{
+    50%{
+        transform: scale(0.9);
+    }
+}
+
+@keyframes win{
+    50%{
+        transform: scale(1.1);
+    }
+}
+
+@keyframes lose{
+    50%{
+        transform: scale(0.9);
+    }
+}
