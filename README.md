@@ -1,3 +1,3 @@
 ### Dice-game
 ----
-Live: 
+Live: https://dice-game-nine-tan.vercel.app/
